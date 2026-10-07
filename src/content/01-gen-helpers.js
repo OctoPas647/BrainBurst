@@ -101,7 +101,16 @@ function mcStr(r, ans, wrongs, keep) {
   return { o: order, a: order.indexOf(ans), fx: !!keep };
 }
 /* Student-produced response: accepted values (numbers or Q fractions) */
-const spr = vals => ({ k: 'n', a: (Array.isArray(vals) ? vals : [vals]).map(v => (typeof v === 'object' ? v.str() : String(v))) });
+/* The first accepted answer is what the app shows as "the answer", so it must be enterable on the SAT
+   (5 characters, 6 with a minus sign). A fraction that's too long, like 81/100, is given as a decimal (.81). */
+function sprFit(s) {
+  if (s.replace(/^-/, '').length <= 5 || !s.includes('/')) return s;
+  const [n, d] = s.split('/').map(Number), v = n / d, sign = v < 0 ? '-' : '', t = Math.abs(v), ip = Math.floor(t);
+  const room = 4 - (ip ? String(ip).length : 0); if (room < 1) return s;
+  const dec = x => sign + x.toFixed(room).replace(/0+$/, '').replace(/\.$/, '').replace(/^0\./, '.');
+  return Math.abs(+t.toFixed(room) - t) < 1e-12 ? dec(t) : dec(Math.trunc(t * 10 ** room) / 10 ** room);
+}
+const spr = vals => ({ k: 'n', a: (Array.isArray(vals) ? vals : [vals]).map(v => sprFit(typeof v === 'object' ? v.str() : String(v))) });
 
 /* Word-problem flavour */
 const NAMES = ['Ava', 'Mateo', 'Priya', 'Kwame', 'Lena', 'Diego', 'Hana', 'Omar', 'Zoe', 'Ivan', 'Maya', 'Tariq', 'Nina', 'Luca', 'Aisha', 'Jonah', 'Elif', 'Sami', 'Rosa', 'Theo'];

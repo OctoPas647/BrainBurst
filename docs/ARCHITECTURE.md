@@ -2,14 +2,15 @@
 
 Plain HTML/CSS/JavaScript, no framework and no npm dependencies. `tools/build.py` joins every file into one page:
 content first (`src/content/0*`, `gens/`, `rw/`, `tests/`, `banks/`, `9*`), then `src/app/` in number order.
-All code shares one global scope; top-level code may only use things from earlier files.
+All code shares one global scope; top-level code may only use things from earlier files
+(for example, `rw/x1-drills.js` is named so it loads after the files that define the shared question prompts).
 
 ## Key globals
 | Name | File | What it is |
 |---|---|---|
 | `SECTIONS`, `DOMAINS`, `SKILLS` | content/00-catalog | The SAT structure: 2 sections, 8 domains, 30 skills |
 | `GENS`, `genItem(sk, d, seed)` | content/01, gens/ | Math generators; the same seed always gives the same question |
-| `BANK`, `lessonSet`, `testSet` | content/02 | Hand-written questions by id |
+| `BANK`, `RWBANK`, `lessonSet`, `drillSet`, `testSet` | content/02 | Hand-written questions by id (lessons, extra drill questions, practice test modules) |
 | `UNITS`, `LESSONS` | content/90, app/13 | The learning path |
 | `S` | app/11 | Saved state (localStorage key `brainburst-sat.v1`) |
 | `rich`, `mathHTML` | app/12 | Text, markdown-lite and math rendering |

@@ -31,8 +31,9 @@ function lessonSet(sk, n, t, tip, items) {
   const ids = addItems(`${sk}-L${n}`, sk, items);
   (LESSON_SETS[sk] = LESSON_SETS[sk] || []).push({ n, t, tip, sk, ids });
 }
-/* Extra practice questions for a skill (used by drills, not by the path) */
-function drillSet(sk, items) { addItems(`${sk}-D${(LESSON_SETS[sk] || []).length}${Object.keys(BANK).length}`, sk, items, { drill: true }); }
+/* Extra practice questions for a skill (used by drills and practice modes, not by the path).
+   n numbers the set so question ids stay fixed: drillSet('wic', 1, [...]) -> wic-D1-01, wic-D1-02 ... */
+function drillSet(sk, n, items) { addItems(`${sk}-D${n}`, sk, items, { drill: true }); }
 /* Questions reserved for a fixed practice test module: testSet('t1', 'RW', 'm1', [...]) */
 function testSet(test, sec, mod, items) {
   const ids = items.map((it, i) => { const id = `${test}-${sec}-${mod}-${String(i + 1).padStart(2, '0')}`; const q = settleOrder(Object.assign({ k: 'm', d: 2 }, it, { id, test })); BANK[id] = q; if (sec === 'RW') RWBANK.push(q); return id; });

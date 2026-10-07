@@ -19,6 +19,7 @@ Everything works offline. Questions are original, written in the style of the di
 | Web page (for testing on a PC) | `python tools/build.py web` | `dist/web/index.html` |
 | Live preview | `python tools/build.py serve` | http://localhost:8000 |
 | Checks | `python tools/build.py check` | syntax + content checks (needs Node.js) |
+| Play-throughs | `python tests/play_lessons.py` · `python tests/play_test.py t1 right` | plays the app in a headless browser (needs Playwright) |
 
 ## Folder map
 
@@ -37,6 +38,7 @@ src/
   app/                     the app code, one file per area, loaded in number order
   styles/                  CSS, one file per area, loaded in number order
 platforms/android/         manifest, Java (WebView), bridge.js, signing key (not in git)
+tests/                     browser play-throughs: play_lessons.py (every lesson), play_test.py (a full practice test)
 assets/                    bundled fonts and app icons
 tools/                     build.py, check_content.js, config.json (name, version)
 ```
@@ -55,8 +57,15 @@ lessonSet('wic', 4, 'Lesson title', 'One-line tip shown before the lesson.', [
 ]);
 ```
 
-`d` is difficulty (1–3). Answer order is shuffled once per question, so write the correct answer anywhere.
-Use `==text==` to underline, `**text**` for bold and lines starting with `- ` for bullet notes.
+`d` is difficulty (1–3). Answer order is shuffled once per question, so write the correct answer anywhere,
+and never refer to a choice by its position ("the first choice") in an explanation: quote it instead.
+Use `==text==` to underline, `**text**` for bold, `*text*` for italics and lines starting with `- ` for bullet notes.
+
+Extra practice questions that aren't part of a lesson (used by the drills) go in `drillSet('wic', 1, [...])`.
+Practice test questions go in `testSet('t1', 'RW', 'm1', [...])` (`m1`, `m2e` easier, `m2h` harder; 27 each),
+and every item needs its own `sk`. Test questions never appear in practice modes.
+The number in `lessonSet` / `drillSet` becomes part of each question's id, so don't renumber existing sets:
+saved progress (mistakes, bookmarks) refers to those ids.
 
 A math generator returns a fresh question from a seeded random generator `r`; see `src/content/gens/alg.js`.
 Run `python tools/build.py check` after editing: it tells you exactly which question has a problem.

@@ -8,9 +8,9 @@ function chartHTML(ch) {
   const legend = names => `<div class="legend">${names.map((n, i) => `<span><i style="background:${cols[i % 4]}"></i>${esc(n)}</span>`).join('')}</div>`;
   let body = '';
   if (ch.t === 'line' || ch.t === 'bar') {
-    const W = 360, H = 220, L = 44, B = ch.xt ? 42 : 30, T = 10, R = 10, max = ch.ymax || niceMax(Math.max(...ch.s.flatMap(s => s.v)) * 1.05), pw = W - L - R, ph = H - T - B;
+    const W = 360, H = 220, L = 44, B = ch.xt ? 42 : 30, T = 10, R = ch.t === 'line' ? 24 : 10, max = ch.ymax || niceMax(Math.max(...ch.s.flatMap(s => s.v)) * 1.05), pw = W - L - R, ph = H - T - B;
     const y = v => T + ph - (v / max) * ph; let g = '';
-    for (let k = 0; k <= 4; k++) { const v = max * k / 4, yy = y(v); g += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" class="grid"/><text x="${L - 6}" y="${yy + 4}" text-anchor="end" class="ax">${+v.toFixed(1)}</text>`; }
+    for (let k = 0; k <= 4; k++) { const v = max * k / 4, yy = y(v); g += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" class="grid"/><text x="${L - 6}" y="${yy + 4}" text-anchor="end" class="ax">${(+v.toFixed(1)).toLocaleString('en-US')}</text>`; }
     const n = ch.x.length;
     if (ch.t === 'line') { const x = i => L + (n === 1 ? pw / 2 : i * pw / (n - 1)); ch.x.forEach((lab, i) => g += `<text x="${x(i)}" y="${T + ph + 18}" text-anchor="middle" class="ax">${esc(lab)}</text>`); ch.s.forEach((s, si) => { g += `<polyline fill="none" stroke="${cols[si % 4]}" stroke-width="3" stroke-linejoin="round" points="${s.v.map((v, i) => x(i) + ',' + y(v)).join(' ')}"/>` + s.v.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="${cols[si % 4]}"><title>${esc(s.n)} ${esc(ch.x[i])}: ${v}</title></circle>`).join(''); }); }
     else { const gw = pw / n, bw = gw * 0.78 / ch.s.length; ch.x.forEach((lab, i) => { g += `<text x="${L + gw * i + gw / 2}" y="${T + ph + 18}" text-anchor="middle" class="ax">${esc(lab)}</text>`; ch.s.forEach((s, si) => { const v = s.v[i], xx = L + gw * i + gw * 0.11 + bw * si; g += `<rect x="${xx}" y="${y(v)}" width="${bw - 2}" height="${T + ph - y(v)}" rx="3" fill="${cols[si % 4]}"><title>${esc(s.n)} ${esc(lab)}: ${v}</title></rect>`; }); }); }

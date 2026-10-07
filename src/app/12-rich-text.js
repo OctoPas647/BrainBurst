@@ -68,9 +68,15 @@ function rich(s) {
   return String(s ?? '').split(/\n\s*\n/).map(par => {
     const lines = par.split('\n').filter(l => l.trim() !== '');
     if (!lines.length) return '';
-    if (lines.every(l => /^\s*[-•]\s+/.test(l))) return `<ul class="rlist">${lines.map(l => `<li>${inlineHTML(l.replace(/^\s*[-•]\s+/, ''))}</li>`).join('')}</ul>`;
     if (lines.every(onlyMath)) return `<div class="mblock">${lines.map(l => `<div>${inlineHTML(l.trim())}</div>`).join('')}</div>`;
-    return `<p>${lines.map(inlineHTML).join('<br>')}</p>`;
+    // runs of "- " lines become a bullet list; other lines stay text (e.g. "the student has taken the following notes:" + bullets)
+    const isB = l => /^\s*[-•]\s+/.test(l); let out = '', k = 0;
+    while (k < lines.length) {
+      const run = []; const b = isB(lines[k]);
+      while (k < lines.length && isB(lines[k]) === b) run.push(lines[k++]);
+      out += b ? `<ul class="rlist">${run.map(l => `<li>${inlineHTML(l.replace(/^\s*[-•]\s+/, ''))}</li>`).join('')}</ul>` : `<p>${run.map(inlineHTML).join('<br>')}</p>`;
+    }
+    return out;
   }).join('');
 }
 /* plain text version (for titles, toasts, accessibility labels) */

@@ -56,7 +56,7 @@ defGen('nleq', {
       return { p: `$${quad(a, b, c)} = 0$\n\nHow many distinct real solutions does the given equation have?`, o: O, a: O.indexOf(ans), fx: true, x: `Use the discriminant $b^2 - 4ac = (${b})^2 - 4(${a})(${c}) = ${D}$. ${D > 0 ? 'Positive: two real solutions.' : D === 0 ? 'Zero: exactly one real solution.' : 'Negative: no real solutions.'}` }; },
     r => { const a = r.int(2, 6), b = r.nz(-15, 15), c = r.nz(-20, 20); const s = Q(-b, a);
       if (b * b - 4 * a * c < 0) return { p: `What is the sum of the solutions to $${quad(a, -b, -c)} = 0$?`, ...spr(Q(b, a)), x: `For $ax^2 + bx + c = 0$, the sum of the solutions is $-frac{b}{a} = ${Q(b, a).tex()}$.` };
-      return { p: `What is the sum of the solutions to $${quad(a, b, c)} = 0$?`, ...spr(s), x: `For $ax^2 + bx + c = 0$ the solutions add up to $-frac{b}{a} = -frac{${b}}{${a}}$${s.d !== a ? ` $= ${s.tex()}$` : ''}. (Check: the discriminant is ${b * b - 4 * a * c}, which is not negative, so there are real solutions.)` }; },
+      return { p: `What is the sum of the solutions to $${quad(a, b, c)} = 0$?`, ...spr(s), x: `For $ax^2 + bx + c = 0$ the solutions add up to $-frac{b}{a} = -frac{${b}}{${a}}$${s.d !== a || b < 0 ? ` $= ${s.tex()}$` : ''}. (Check: the discriminant is ${b * b - 4 * a * c}, which is not negative, so there are real solutions.)` }; },
     r => { const p0 = r.int(1, 6), q0 = -r.int(1, 6), k = r.int(1, 4), m = r.nz(-5, 5);
       // y = x^2 + m  and  y = kx + n  meet where x^2 - kx + (m - n) = 0 with roots p0, q0 -> sum = k
       const kk = p0 + q0, nn = m - p0 * q0;
