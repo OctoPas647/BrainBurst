@@ -1,0 +1,38 @@
+/* ===== Tokens ===== */
+:root {
+  --bg: #F5F4FC; --surface: #FFFFFF; --surface2: #EEEDF8; --border: #DDDBEE; --text: #1A1838; --muted: #625F82; --nav: #FFFFFF;
+  --primary: #5B4CF5; --primary-ink: #FFFFFF; --accent: #00A6D6; --xp: #F5A800; --streak: #FF7A1A; --heart: #EE3D57;
+  --correct: #1FA968; --correct-bg: #E2F7EC; --wrong: #E5384F; --wrong-bg: #FDE8EB;
+  --math: #F2612E; --verbal: #0F9F86;
+  --fill: #1FA968; --track: #E4E2F1; --path: #CCC9DF; --paper: #FFFFFF; --paper-ink: #1E1E2B; --mark: #FFE45C;
+  --c1: #5B4CF5; --c2: #F2612E; --c3: #0F9F86; --c4: #00A6D6;
+  --radius: 16px; --depth: 4px;
+  --font-display: "Baloo 2", "Nunito", ui-rounded, system-ui, sans-serif;
+  --font-ui: "Nunito", ui-rounded, system-ui, sans-serif;
+  --font-paper: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sk: var(--primary);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #100F1E; --surface: #19172C; --surface2: #232039; --border: #302C4A; --text: #F0EFFA; --muted: #A19EBD; --nav: #141226;
+    --primary: #8C80FF; --primary-ink: #0E0C1E; --accent: #3CCBF2; --xp: #FFC83D; --streak: #FF9440; --heart: #FF5C74;
+    --correct: #3DD68C; --correct-bg: #133628; --wrong: #FF5C74; --wrong-bg: #3A1820;
+    --math: #FF8A5C; --verbal: #2FD3B4;
+    --fill: #3DD68C; --track: #2B2843; --path: #3E3A5C; --paper: #1C1A30; --paper-ink: #E8E6F2; --mark: #7A6200;
+    --c1: #8C80FF; --c2: #FF8A5C; --c3: #2FD3B4; --c4: #3CCBF2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+--bg: #100F1E; --surface: #19172C; --surface2: #232039; --border: #302C4A; --text: #F0EFFA; --muted: #A19EBD; --nav: #141226;
+  --primary: #8C80FF; --primary-ink: #0E0C1E; --accent: #3CCBF2; --xp: #FFC83D; --streak: #FF9440; --heart: #FF5C74;
+  --correct: #3DD68C; --correct-bg: #133628; --wrong: #FF5C74; --wrong-bg: #3A1820;
+  --math: #FF8A5C; --verbal: #2FD3B4;
+  --fill: #3DD68C; --track: #2B2843; --path: #3E3A5C; --paper: #1C1A30; --paper-ink: #E8E6F2; --mark: #7A6200;
+  --c1: #8C80FF; --c2: #FF8A5C; --c3: #2FD3B4; --c4: #3CCBF2;
+  color-scheme: dark;
+}
+.sk-math { --sk: var(--math); } .sk-verbal { --sk: var(--verbal); } .sk-exam { --sk: var(--primary); }
+/* legacy names some shared styles still use */
+:root { --listening: var(--accent); --reading: var(--verbal); --writing: var(--math); --speaking: var(--heart); }

@@ -1,0 +1,8 @@
+# Build output (recreate with: python tools/build.py all)
+dist/
+build/
+__pycache__/
+# Your Android signing key: back it up somewhere safe, don't publish it
+platforms/android/signing/
+.DS_Store
+Thumbs.db

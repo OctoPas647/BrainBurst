@@ -1,0 +1,10 @@
+{
+  "appName": "BrainBurst",
+  "title": "BrainBurst \u00b7 SAT prep",
+  "version": "1.0.0",
+  "androidVersionCode": 1,
+  "androidPackage": "com.brainburst.sat",
+  "androidMinSdk": 24,
+  "androidTargetSdk": 34,
+  "themeColor": "#F5F4FC"
+}

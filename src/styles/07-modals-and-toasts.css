@@ -1,0 +1,13 @@
+/* ===== Modal & toasts ===== */
+.modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 1rem; background: rgba(8, 12, 24, .55); animation: fade .15s; }
+.mcard { position: relative; width: min(520px, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; background: var(--surface); border-radius: calc(var(--radius) * 1.2); padding: 1.6rem 1.4rem 1.4rem; border: 2px solid var(--border); }
+.mcard h2 { padding-right: 2.5rem; display: flex; align-items: center; gap: .5rem; }
+.mx { position: absolute; top: .6rem; right: .6rem; }
+.mbtns { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin-top: 1rem; }
+.mcard .fld { margin-bottom: .8rem; }
+.lsheet { text-align: left; }
+.lsic { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 20px; background: var(--sk); color: #fff; margin-bottom: .8rem; }
+.lsic svg { width: 2rem; height: 2rem; }
+.sheetgrid { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+@keyframes fade { from { opacity: 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }

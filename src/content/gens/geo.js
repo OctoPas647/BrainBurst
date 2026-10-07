@@ -1,0 +1,139 @@
+/* ================= Geometry and Trigonometry generators ================= */
+const piT = k => (typeof k === 'object' ? (k.isInt ? co(k.n, 'pi') : `frac{${co(Math.abs(k.n), 'pi')}}{${k.d}}`.replace(/^/, k.n < 0 ? '-' : '')) : co(k, 'pi'));
+const NS = 'Note: Figure not drawn to scale.';
+const TRIPLES = [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [6, 8, 10], [9, 12, 15], [12, 16, 20], [20, 21, 29]];
+
+/* ---------- Area and volume ---------- */
+defGen('area', {
+  1: [
+    r => { const l = r.int(4, 15), w = r.int(2, 12), ask = r.pick(['w', 'P']);
+      return ask === 'w' ? { p: `A rectangle has an area of ${l * w} square inches and a length of ${l} inches. What is the width of the rectangle, in inches?`, ...spr(w), x: `Area = length × width, so width $= frac{${l * w}}{${l}} = ${w}$ inches.` }
+        : { p: `A rectangle has an area of ${l * w} square meters and a length of ${l} meters. What is the perimeter of the rectangle, in meters?`, ...spr(2 * (l + w)), x: `Width $= frac{${l * w}}{${l}} = ${w}$. Perimeter $= 2(${l} + ${w}) = ${2 * (l + w)}$.` }; },
+    r => { const rr = r.int(2, 12), useD = r.chance(0.5);
+      return { p: `A circle has a ${useD ? `diameter of ${2 * rr}` : `radius of ${rr}`} centimeters. What is the area of the circle, in square centimeters?`, ...mcStr(r, m$(piT(rr * rr)), [m$(piT(2 * rr)), m$(piT(4 * rr * rr)), m$(piT(rr)), m$(piT(2 * rr * rr))]), x: `${useD ? `The radius is half the diameter: ${rr}. ` : ''}Area $= pi r^2 = pi(${rr})^2 = ${piT(rr * rr)}$.` }; },
+    r => { const b = r.int(3, 9) * 2, h = r.int(2, 9);
+      const fig = { t: 'geo', P: { A: [0, 0], B: [b, 0], C: [b * 0.35, h], D: [b * 0.35, 0] }, poly: [['A', 'B', 'C']], dash: [['C', 'D']], right: [['B', 'D', 'C']], side: [['A', 'B', String(b)], ['C', 'D', String(h)]], hide: ['D'], note: NS };
+      return { p: `In the triangle shown, the base is ${b} units and the height is ${h} units. What is the area of the triangle, in square units?`, fig, ...spr(b * h / 2), x: `Area $= frac{1}{2}bh = frac{1}{2}(${b})(${h}) = ${b * h / 2}$.` }; }
+  ],
+  2: [
+    r => { const kind = r.pick(['prism', 'cyl']);
+      if (kind === 'prism') { const l = r.int(2, 9), w = r.int(2, 8), h = r.int(2, 10); return { p: `A rectangular box has a length of ${l} feet, a width of ${w} feet and a height of ${h} feet. What is the volume of the box, in cubic feet?`, ...spr(l * w * h), x: `Volume $= lwh = ${l} * ${w} * ${h} = ${l * w * h}$.` }; }
+      const rr = r.int(2, 6), h = r.int(2, 10);
+      return { p: `A right circular cylinder has a radius of ${rr} inches and a height of ${h} inches. What is the volume of the cylinder, in cubic inches?`, ...mcStr(r, m$(piT(rr * rr * h)), [m$(piT(2 * rr * h)), m$(piT(rr * h)), m$(piT(rr * rr * h * 2)), m$(piT(Math.round(rr * rr * h / 3)))]), x: `Volume $= pi r^2 h = pi(${rr})^2(${h}) = ${piT(rr * rr * h)}$.` }; },
+    r => { const L = r.int(8, 20), W = r.int(5, 14), w = r.int(1, 3);
+      return { p: `A rectangular garden is ${L} feet long and ${W} feet wide. A path of uniform width ${w} feet is built around the outside of the garden. What is the area of the path, in square feet?`, ...spr((L + 2 * w) * (W + 2 * w) - L * W), x: `Outer rectangle: $(${L} + ${2 * w})(${W} + ${2 * w}) = ${(L + 2 * w) * (W + 2 * w)}$. Subtract the garden: $${(L + 2 * w) * (W + 2 * w)} - ${L * W} = ${(L + 2 * w) * (W + 2 * w) - L * W}$.` }; },
+    r => { const s = r.int(2, 9);
+      return { p: `The surface area of a cube is ${6 * s * s} square centimeters. What is the volume of the cube, in cubic centimeters?`, ...spr(s * s * s), x: `A cube has 6 equal square faces: $6s^2 = ${6 * s * s}$, so $s^2 = ${s * s}$ and $s = ${s}$. Volume $= ${s}^3 = ${s * s * s}$.` }; }
+  ],
+  3: [
+    r => { const k = r.int(2, 4), what = r.pick(['volume', 'area']), shape = what === 'volume' ? r.pick(['cylinder', 'rectangular prism', 'cone']) : r.pick(['rectangle', 'triangle', 'circle']);
+      const f = what === 'volume' ? k * k * k : k * k;
+      return { p: `Every linear dimension of a ${shape} is multiplied by ${k}. The ${what} of the new ${shape} is how many times the ${what} of the original ${shape}?`, ...mcNum(r, f, [k, what === 'volume' ? k * k : k * k * k, 2 * k]), x: `Scaling every length by ${k} multiplies ${what === 'volume' ? 'volume by $k^3$' : 'area by $k^2$'}: $${k}^${what === 'volume' ? 3 : 2} = ${f}$.` }; },
+    r => { const kind = r.pick(['sphere', 'cone']);
+      if (kind === 'sphere') { const rr = r.pick([3, 6]), V = Q(4 * rr * rr * rr, 3); return { p: `What is the volume of a sphere with radius ${rr}?`, ...mcStr(r, m$(piT(V)), [4 * rr * rr, Q(4 * rr * rr, 3), rr * rr * rr, 2 * rr * rr * rr, 4 * rr * rr * rr].map(v => m$(piT(v))).filter(v => v !== m$(piT(V)))), x: `$V = frac{4}{3}pi r^3 = frac{4}{3}pi(${rr * rr * rr}) = ${piT(V)}$.` }; }
+      const rr = r.pick([3, 6]), h = r.int(2, 9), V = Q(rr * rr * h, 3);
+      return { p: `A right circular cone has a radius of ${rr} and a height of ${h}. What is the volume of the cone?`, ...mcStr(r, m$(piT(V)), [m$(piT(rr * rr * h)), m$(piT(Q(rr * h, 3))), m$(piT(Q(2 * rr * h, 3)))]), x: `$V = frac{1}{3}pi r^2 h = frac{1}{3}pi(${rr * rr})(${h}) = ${piT(V)}$.` }; },
+    r => { const a = r.pick([10, 20, 25, 30]), up = r.chance(0.5); const net = (1 + a / 100) * (1 - a / 100);
+      return { p: `The length of a rectangle is ${up ? 'increased' : 'decreased'} by ${a}%, and its width is ${up ? 'decreased' : 'increased'} by ${a}%. How does the area of the new rectangle compare with the area of the original?`, ...mcStr(r, `It is ${fmtNum((1 - net) * 100)}% smaller.`, ['It is the same.', `It is ${fmtNum((1 - net) * 100)}% larger.`, `It is ${a}% smaller.`]), x: `New area $= (${fmtNum(1 + a / 100)})(${fmtNum(1 - a / 100)}) = ${fmtNum(net)}$ times the original: ${fmtNum((1 - net) * 100)}% smaller.` }; }
+  ]
+});
+
+/* ---------- Lines, angles and triangles ---------- */
+defGen('lat', {
+  1: [
+    r => { const a = r.int(25, 85), b = r.int(20, 175 - a - 5);
+      return { p: `In triangle $ABC$, the measure of angle $A$ is ${a}° and the measure of angle $B$ is ${b}°. What is the measure, in degrees, of angle $C$?`, ...spr(180 - a - b), x: `The angles of a triangle add up to 180°: $180 - ${a} - ${b} = ${180 - a - b}$.` }; },
+    r => { const a = r.int(25, 155);
+      const t = a * Math.PI / 180; const fig = { t: 'geo', P: { A: [-4, 0], B: [4, 0], O: [0, 0], C: [3.2 * Math.cos(t), 3.2 * Math.sin(t)] }, seg: [['A', 'B'], ['O', 'C']], ang: [['B', 'O', 'C', a + '°'], ['C', 'O', 'A', 'x°']], hide: ['A', 'B', 'C'], dots: ['O'], note: NS };
+      return { p: 'In the figure, the horizontal segment is a straight line. What is the value of $x$?', fig, ...spr(180 - a), x: `Angles along a straight line add up to 180°: $x = 180 - ${a} = ${180 - a}$.` }; }
+  ],
+  2: [
+    r => { const a = r.int(35, 145), rel = r.pick(['corr', 'vert', 'altx', 'supp']);
+      const t = a * Math.PI / 180, dx = Math.cos(t), dy = Math.sin(t);
+      const P = { L1: [-5, 2], R1: [5, 2], L2: [-5, -2], R2: [5, -2], X: [2 * dx / dy, 2], Y: [-2 * dx / dy, -2], T: [2 * dx / dy + 2.4 * dx, 2 + 2.4 * dy], U: [-2 * dx / dy - 2.4 * dx, -2 - 2.4 * dy] };
+      const mark = { corr: ['R2', 'Y', 'X'], vert: ['L1', 'X', 'Y'], altx: ['L2', 'Y', 'U'], supp: ['L2', 'Y', 'X'] }[rel];
+      const ans = rel === 'supp' ? 180 - a : a;
+      const why = { corr: 'The marked angles are corresponding angles, which are equal when lines are parallel', vert: 'The marked angles are vertical angles, which are always equal', altx: 'The marked angles are alternate exterior angles, which are equal when lines are parallel', supp: `The x° angle and the angle corresponding to the ${a}° angle together form a straight line, so they add up to 180°` }[rel];
+      const fig = { t: 'geo', P, seg: [['L1', 'R1'], ['L2', 'R2'], ['T', 'U']], ang: [['R1', 'X', 'T', a + '°'], [...mark, 'x°']], hide: Object.keys(P), note: 'The two horizontal lines are parallel. ' + NS };
+      return { p: 'In the figure, the two horizontal lines are parallel and are cut by a transversal. What is the value of $x$?', fig, ...spr(ans), x: `${why}: $x = ${rel === 'supp' ? `180 - ${a} = ` : ''}${ans}$.` }; },
+    r => { const v = r.pick([20, 30, 40, 50, 70, 80, 100, 110, 120, 130, 140]), askBase = r.chance(0.6);
+      return askBase ? { p: `In isosceles triangle $PQR$, $PQ = PR$ and the measure of angle $P$ is ${v}°. What is the measure, in degrees, of angle $Q$?`, ...spr((180 - v) / 2), x: `The base angles $Q$ and $R$ are equal: $frac{180 - ${v}}{2} = ${(180 - v) / 2}$.` }
+        : { p: `In isosceles triangle $PQR$, $PQ = PR$ and the measure of angle $Q$ is ${(180 - v) / 2}°. What is the measure, in degrees, of angle $P$?`, ...spr(v), x: `Angles $Q$ and $R$ are equal, so $P = 180 - 2(${(180 - v) / 2}) = ${v}$.` }; },
+    r => { const [a, b, c] = r.pick(TRIPLES.slice(0, 5)), k = r.pick([2, 3, Q(3, 2), Q(5, 2)]), kq = toQ(k);
+      const fig = { t: 'geo', P: { A: [0, 0], B: [4, 0], C: [0, 3], D: [6, 0], E: [10, 0], F: [6, 3 * 1.6] }, poly: [['A', 'B', 'C'], ['D', 'E', 'F']], side: [['A', 'B', String(b)], ['A', 'C', String(a)], ['D', 'E', kq.mul(b).str()], ['D', 'F', '?']], hide: ['A', 'B', 'C', 'D', 'E', 'F'], note: NS };
+      return { p: `Two triangles are similar, with corresponding sides labeled in the figure. The smaller triangle has sides of ${a} and ${b}. The corresponding side to ${b} in the larger triangle is ${kq.mul(b).isInt ? kq.mul(b).n : fmtNum(kq.mul(b).v)}. What is the length of the side marked “?”, which corresponds to ${a}?`, fig, ...spr(kq.mul(a)), x: `The scale factor is $frac{${kq.mul(b).isInt ? kq.mul(b).n : fmtNum(kq.mul(b).v)}}{${b}} = ${kq.tex()}$. So the side is $${a} * ${kq.tex()} = ${kq.mul(a).tex()}$.` }; }
+  ],
+  3: [
+    r => { const n = r.pick([5, 6, 8, 9, 10, 12]), ask = r.pick(['sum', 'each']);
+      return ask === 'sum' ? { p: `What is the sum of the measures, in degrees, of the interior angles of a polygon with ${n} sides?`, ...spr((n - 2) * 180), x: `$(n - 2) * 180 = (${n} - 2) * 180 = ${(n - 2) * 180}$.` }
+        : { p: `What is the measure, in degrees, of each interior angle of a regular polygon with ${n} sides?`, ...spr((n - 2) * 180 / n), x: `Sum $= (${n} - 2) * 180 = ${(n - 2) * 180}$. Each of the ${n} equal angles: $frac{${(n - 2) * 180}}{${n}} = ${(n - 2) * 180 / n}$.` }; },
+    r => { const AD = r.int(2, 8), DB = r.int(2, 8), DE = r.int(3, 9), BC = Q(DE * (AD + DB), AD);
+      const fig = { t: 'geo', P: { A: [2.5, 6], B: [0, 0], C: [7, 0], D: [2.5 - 2.5 * AD / (AD + DB), 6 - 6 * AD / (AD + DB)], E: [2.5 + 4.5 * AD / (AD + DB), 6 - 6 * AD / (AD + DB)] }, poly: [['A', 'B', 'C']], seg: [['D', 'E']], side: [['A', 'D', String(AD)], ['D', 'B', String(DB)], ['D', 'E', String(DE)]], note: NS };
+      return { p: `In triangle $ABC$, point $D$ lies on $bar{AB}$, point $E$ lies on $bar{AC}$, and $bar{DE}$ is parallel to $bar{BC}$. If $AD = ${AD}$, $DB = ${DB}$ and $DE = ${DE}$, what is the length of $bar{BC}$?`, fig, ...spr(BC), x: `Triangles $ADE$ and $ABC$ are similar because $bar{DE} parallel bar{BC}$. $frac{BC}{DE} = frac{AB}{AD} = frac{${AD + DB}}{${AD}}$, so $BC = ${DE} * frac{${AD + DB}}{${AD}} = ${BC.tex()}$.` }; },
+    r => { const x = r.int(10, 30), a = r.int(2, 3), b = r.int(5, 20), c = r.int(1, 2), d = r.int(5, 25); const A = a * x + b, B = c * x + d; if (A + B >= 175) return { p: 'Two angles of a triangle measure $(2x + 10)°$ and $(x + 20)°$, and the exterior angle at the third vertex measures $(4x - 10)°$. What is $x$?', ...spr(40), x: 'An exterior angle equals the sum of the two remote interior angles: $4x - 10 = 3x + 30$, so $x = 40$.' };
+      const e = A + B, k = r.int(4, 5), m = e - k * x;
+      return { p: `In a triangle, two interior angles measure $(${lin(a, b)})°$ and $(${lin(c, d)})°$. The exterior angle at the third vertex measures $(${lin(k, m)})°$. What is the value of $x$?`, ...spr(x), x: `An exterior angle equals the sum of the two remote interior angles: $${lin(k, m)} = ${lin(a + c, b + d)}$, so $${co(k - a - c)} = ${b + d - m}$ and $x = ${x}$.` }; }
+  ]
+});
+
+/* ---------- Right triangles and trigonometry ---------- */
+const triFig = (a, b, labs) => ({ t: 'geo', P: { A: [0, 0], B: [b, 0], C: [b, a] }, poly: [['A', 'B', 'C']], right: [['A', 'B', 'C']], side: labs, note: NS });
+defGen('trig', {
+  1: [
+    r => { const [a, b, c] = r.pick(TRIPLES), ask = r.pick(['c', 'c', 'leg']);
+      return ask === 'c' ? { p: `A right triangle has legs of length ${a} and ${b}. What is the length of the hypotenuse?`, ...spr(c), x: `$c = sqrt{${a}^2 + ${b}^2} = sqrt{${a * a + b * b}} = ${c}$.` }
+        : { p: `A right triangle has a hypotenuse of length ${c} and one leg of length ${a}. What is the length of the other leg?`, ...spr(b), x: `$b = sqrt{${c}^2 - ${a}^2} = sqrt{${c * c - a * a}} = ${b}$.` }; },
+    r => { const [a, b, c] = r.pick(TRIPLES.slice(0, 4)), fn = r.pick(['sin', 'cos', 'tan']);
+      const fig = triFig(a, b, [['A', 'B', String(b)], ['B', 'C', String(a)], ['A', 'C', String(c)]]);
+      const val = fn === 'sin' ? Q(a, c) : fn === 'cos' ? Q(b, c) : Q(a, b);
+      return { p: `In right triangle $ABC$ shown, angle $B$ is a right angle. What is the value of $${fn}(A)$?`, fig, ...mcStr(r, m$(val.tex()), [Q(a, c), Q(b, c), Q(a, b), Q(b, a), Q(c, a)].map(q => m$(q.tex())).filter(v => v !== m$(val.tex()))), x: `From angle $A$: opposite = ${a}, adjacent = ${b}, hypotenuse = ${c}. ${fn === 'sin' ? 'sin = opposite ÷ hypotenuse' : fn === 'cos' ? 'cos = adjacent ÷ hypotenuse' : 'tan = opposite ÷ adjacent'} $= ${val.tex()}$.` }; }
+  ],
+  2: [
+    r => { const kind = r.pick(['45', '30']), s = r.int(2, 9);
+      if (kind === '45') { const askH = r.chance(0.5); return askH ? { p: `Each leg of an isosceles right triangle has length ${s}. What is the length of the hypotenuse?`, ...mcStr(r, m$(`${s}sqrt{2}`), [m$(`${s}sqrt{3}`), m$(`${2 * s}`), m$(`frac{${s}sqrt{2}}{2}`), m$(`${s * s}`)]), x: `In a 45°-45°-90° triangle, hypotenuse = leg × $sqrt{2}$: $${s}sqrt{2}$.` } : { p: `The hypotenuse of an isosceles right triangle has length $${s}sqrt{2}$. What is the length of each leg?`, ...mcStr(r, m$(String(s)), [m$(`${s}sqrt{2}`), m$(`${2 * s}`), m$(`frac{${s}}{2}`)]), x: `Leg = hypotenuse ÷ $sqrt{2}$ = ${s}.` }; }
+      const ask = r.pick(['long', 'hyp']);
+      return ask === 'long' ? { p: `In a 30°-60°-90° triangle, the shorter leg has length ${s}. What is the length of the longer leg?`, ...mcStr(r, m$(`${s}sqrt{3}`), [m$(`${s}sqrt{2}`), m$(`${2 * s}`), m$(`frac{${s}sqrt{3}}{3}`)]), x: `Sides are in the ratio $1 : sqrt{3} : 2$, so the longer leg is $${s}sqrt{3}$.` }
+        : { p: `In a 30°-60°-90° triangle, the shorter leg has length ${s}. What is the length of the hypotenuse?`, ...mcStr(r, m$(String(2 * s)), [m$(`${s}sqrt{3}`), m$(`${s}sqrt{2}`), m$(String(3 * s))]), x: `The hypotenuse is twice the shorter leg: ${2 * s}.` }; },
+    r => { const k = r.int(5, 85), fn = r.pick(['sin', 'cos']);
+      return { p: `In a right triangle, $${fn}(x°) = ${fn === 'sin' ? 'cos' : 'sin'}(${k}°)$, where $0 < x < 90$. What is the value of $x$?`, ...spr(90 - k), x: `Sine and cosine of complementary angles are equal: $${fn}(x°) = ${fn === 'sin' ? 'cos' : 'sin'}(90° - x°)$. So $90 - x = ${k}$ and $x = ${90 - k}$.` }; },
+    r => { const [a, b, c] = r.pick(TRIPLES.slice(0, 5)), k = r.int(2, 4);
+      return { p: `In right triangle $DEF$, angle $E$ is a right angle, $DE = ${b * k}$ and $EF = ${a * k}$. What is the value of $cos(D)$?`, ...mcStr(r, m$(Q(b, c).tex()), [Q(a, c), Q(a, b), Q(b, a), Q(c, b)].map(q => m$(q.tex()))), x: `The hypotenuse is $DF = sqrt{${b * k}^2 + ${a * k}^2} = ${c * k}$. $cos(D) = frac{text{adjacent}}{text{hypotenuse}} = frac{${b * k}}{${c * k}} = ${Q(b, c).tex()}$.` }; }
+  ],
+  3: [
+    r => { const [a, b, c] = r.pick(TRIPLES.slice(0, 4)), ask = r.pick(['tan', 'cos']);
+      return { p: `In right triangle $RST$, angle $T$ is a right angle and $sin(R) = frac{${a}}{${c}}$. What is the value of $${ask}(R)$?`, ...mcStr(r, m$((ask === 'tan' ? Q(a, b) : Q(b, c)).tex()), [Q(a, b), Q(b, c), Q(b, a), Q(c, b), Q(c, a)].map(q => m$(q.tex())).filter(v => v !== m$((ask === 'tan' ? Q(a, b) : Q(b, c)).tex()))), x: `Use sides ${a} (opposite) and ${c} (hypotenuse). The adjacent side is $sqrt{${c}^2 - ${a}^2} = ${b}$. ${ask === 'tan' ? `$tan(R) = frac{${a}}{${b}}$` : `$cos(R) = frac{${b}}{${c}}$`}.` }; },
+    r => { const toDeg = r.chance(0.5), [n, d] = r.pick([[1, 6], [1, 4], [1, 3], [1, 2], [2, 3], [3, 4], [5, 6], [5, 4], [3, 2], [7, 6]]);
+      const deg = 180 * n / d;
+      return toDeg ? { p: `An angle measures $frac{${co(n, 'pi')}}{${d}}$ radians. What is its measure in degrees?`, ...spr(deg), x: `Multiply by $frac{180}{pi}$: $frac{${n}(180)}{${d}} = ${deg}$.` }
+        : { p: `An angle measures ${deg}°. What is its measure in radians?`, ...mcStr(r, m$(piT(Q(n, d))), [Q(d, n), Q(n, 2 * d), Q(2 * n, d), Q(deg, 1), Q(3 * n, 2 * d)].map(q => m$(piT(q))).filter(v => v !== m$(piT(Q(n, d))))), x: `Multiply by $frac{pi}{180}$: $frac{${deg}pi}{180} = frac{${co(n, 'pi')}}{${d}}$.` }; },
+    r => { const [a, b, c] = r.pick(TRIPLES.slice(0, 4)), H = c * r.int(2, 4);
+      return { p: `In right triangle $JKL$, angle $K$ is a right angle, $cos(J) = ${fmtNum(b / c)}$ and $JL = ${H}$. What is the length of $bar{JK}$?`, ...spr(+(H * b / c).toFixed(2)), x: `$cos(J) = frac{JK}{JL}$, so $JK = ${H} * ${fmtNum(b / c)} = ${fmtNum(H * b / c)}$.` }; }
+  ]
+});
+
+/* ---------- Circles ---------- */
+defGen('circ', {
+  1: [
+    r => { const d = r.int(2, 12) * 2, ask = r.pick(['C', 'A']);
+      return { p: `A circle has a diameter of ${d} meters. What is the ${ask === 'C' ? 'circumference' : 'area'} of the circle, in ${ask === 'C' ? 'meters' : 'square meters'}?`, ...mcStr(r, m$(piT(ask === 'C' ? d : d * d / 4)), (ask === 'C' ? [d / 2, 2 * d, d * d / 4, d * d, 3 * d] : [d * d, d, d * d / 2, d / 2, 2 * d * d]).map(v => m$(piT(v))).filter(v => v !== m$(piT(ask === 'C' ? d : d * d / 4)))), x: ask === 'C' ? `Circumference $= pi d = ${piT(d)}$.` : `Radius $= ${d / 2}$. Area $= pi r^2 = ${piT(d * d / 4)}$.` }; }
+  ],
+  2: [
+    r => { const h = r.nz(-6, 6), k = r.nz(-6, 6), rr = r.int(2, 9), ask = r.pick(['center', 'radius']);
+      const eq = `(${lin(1, -h)})^2 + (${lin(1, -k, 'y')})^2 = ${rr * rr}`;
+      return ask === 'center' ? { p: `In the $xy$-plane, what is the center of the circle $${eq}$?`, ...mcStr(r, m$(`(${h}, ${k})`), [m$(`(${-h}, ${-k})`), m$(`(${-h}, ${k})`), m$(`(${h}, ${-k})`)]), x: `$(x - h)^2 + (y - k)^2 = r^2$ has center $(h, k)$. Watch the signs: the center is $(${h}, ${k})$.` }
+        : { p: `In the $xy$-plane, what is the radius of the circle $${eq}$?`, ...spr(rr), x: `$r^2 = ${rr * rr}$, so $r = ${rr}$.` }; },
+    r => { const rr = r.int(2, 12), ang = r.pick([30, 45, 60, 90, 120, 135, 150, 240]); const arc = Q(ang * 2 * rr, 360);
+      return { p: `A circle has a radius of ${rr} inches. What is the length, in inches, of an arc of the circle intercepted by a central angle of ${ang}°?`, ...mcStr(r, m$(piT(arc)), [Q(ang * rr * rr, 360), Q(ang * rr, 360), arc.mul(2), Q(ang, 360).mul(rr).mul(4), arc.add(1), Q(ang * rr * rr, 180), Q(2 * rr * 360, ang)].map(v => m$(piT(v))).filter(v => v !== m$(piT(arc)))), x: `Arc length $= frac{${ang}}{360} * 2pi(${rr}) = ${piT(arc)}$.` }; },
+    r => { const rr = r.int(2, 10), ang = r.pick([36, 45, 60, 72, 90, 120]); const A = Q(ang * rr * rr, 360);
+      return { p: `A sector of a circle with radius ${rr} has a central angle of ${ang}°. What is the area of the sector?`, ...mcStr(r, m$(piT(A)), [Q(ang * 2 * rr, 360), Q(rr * rr), A.mul(2), Q(ang * rr, 360), A.add(1), Q(ang * rr * rr, 180)].map(v => m$(piT(v))).filter(v => v !== m$(piT(A)))), x: `Sector area $= frac{${ang}}{360} * pi(${rr})^2 = ${piT(A)}$.` }; }
+  ],
+  3: [
+    r => { const h = r.nz(-6, 6), k = r.nz(-6, 6), rr = r.int(2, 9); const D = -2 * h, E = -2 * k, F = h * h + k * k - rr * rr;
+      return { p: `In the $xy$-plane, the graph of $x^2 + y^2${D ? plus(D).replace(/(\d+)$/, '$1x') : ''}${E ? plus(E).replace(/(\d+)$/, '$1y') : ''}${F ? plus(F) : ''} = 0$ is a circle. What is the radius of the circle?`, ...spr(rr), x: `Complete the square: $(x${plus(-h)})^2 - ${h * h} + (y${plus(-k)})^2 - ${k * k}${F ? plus(F) : ''} = 0$, so $(x${plus(-h)})^2 + (y${plus(-k)})^2 = ${rr * rr}$. The radius is ${rr}.` }; },
+    r => { const rr = r.int(2, 9), [n, d] = r.pick([[1, 6], [1, 4], [1, 3], [2, 3], [3, 4], [5, 6], [1, 2]]); const s = Q(rr * n, d);
+      return { p: `A circle has a radius of ${rr}. What is the length of the arc intercepted by a central angle of $frac{${co(n, 'pi')}}{${d}}$ radians?`, ...mcStr(r, m$(piT(s)), [s.mul(2), Q(rr * rr * n, d), Q(n, d), s.div(2), s.add(1), Q(rr * n, 2 * d).mul(3), Q(rr * n * 180, d)].map(v => m$(piT(v))).filter(v => v !== m$(piT(s)))), x: `With the angle in radians, arc length $= rtheta = ${rr} * frac{${co(n, 'pi')}}{${d}} = ${piT(s)}$.` }; },
+    r => { const h = r.nz(-4, 4), k = r.nz(-4, 4), [a, b, c] = r.pick([[3, 4, 5], [6, 8, 10], [5, 12, 13]]);
+      const pt = (x, y) => m$(`(${x}, ${y})`); const on = [h + a, k + b];
+      return { p: `In the $xy$-plane, a circle has center $(${h}, ${k})$ and radius ${c}. Which point lies on the circle?`, ...mcStr(r, pt(...on), [pt(h + c - 1, k + 1), pt(h + a, k + a), pt(h + b, k + b), pt(h + c, k + c)]), x: `A point is on the circle if its distance from the center is ${c}. For $(${on[0]}, ${on[1]})$: $sqrt{${a}^2 + ${b}^2} = ${c}$ ✓.` }; }
+  ]
+});

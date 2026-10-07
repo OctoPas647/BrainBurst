@@ -1,0 +1,37 @@
+/* ===== Buttons & controls ===== */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 46px; padding: .6rem 1.1rem; border: 2px solid var(--border); border-bottom-width: calc(2px + var(--depth)); border-radius: var(--radius); background: var(--surface); color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; letter-spacing: .01em; transition: transform .06s, border-bottom-width .06s; text-decoration: none; }
+.btn:active:not(:disabled) { transform: translateY(var(--depth)); border-bottom-width: 2px; }
+.btn.primary { background: var(--primary); color: var(--primary-ink); border-color: color-mix(in srgb, var(--primary) 75%, #000); }
+.btn.danger { background: var(--wrong); color: #fff; border-color: color-mix(in srgb, var(--wrong) 70%, #000); }
+.btn.ghost { background: transparent; }
+.btn.small { min-height: 36px; padding: .35rem .8rem; font-size: .92rem; }
+.btn.wide { width: 100%; }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.muted-on { opacity: .8; font-weight: 600; }
+.iconbtn { display: inline-grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); }
+@media (hover: hover) { .iconbtn:hover { background: var(--surface2); color: var(--text); } }
+.seg { display: inline-flex; background: var(--surface2); border-radius: 999px; padding: 4px; gap: 2px; }
+.seg button { border: 0; background: transparent; padding: .45rem .9rem; border-radius: 999px; font-weight: 800; color: var(--muted); display: inline-flex; gap: .35rem; align-items: center; }
+.seg button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 0 var(--border), 0 2px 6px rgba(0,0,0,.08); }
+.fld { display: flex; flex-direction: column; gap: .3rem; font-weight: 700; font-size: .92rem; }
+.fld output { font-weight: 800; color: var(--primary); }
+select, input[type="text"], input[type="number"], input:not([type]), textarea { background: var(--surface); border: 2px solid var(--border); border-radius: calc(var(--radius) * .7); padding: .55rem .75rem; min-height: 44px; width: 100%; }
+textarea { line-height: 1.55; resize: vertical; }
+select:focus, input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent); }
+input[type="range"] { width: 100%; accent-color: var(--primary); min-height: 32px; }
+input[type="checkbox"] { accent-color: var(--primary); width: 1.15rem; height: 1.15rem; flex: none; }
+.tog { display: flex; align-items: center; gap: .6rem; font-weight: 600; padding: .35rem 0; cursor: pointer; }
+.row3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .9rem; margin: .5rem 0; }
+.grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.grid2 { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.2rem; }
+.fchip { border: 2px solid var(--border); background: var(--surface); padding: .4rem .9rem; border-radius: 999px; font-weight: 800; color: var(--muted); }
+.fchip.on { border-color: var(--primary); color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, var(--surface)); }
+.bar { height: 12px; background: var(--track); border-radius: 999px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--fill); border-radius: inherit; transition: width .5s ease; position: relative; }
+.bar i::after { content: ""; position: absolute; left: 8px; right: 8px; top: 3px; height: 3px; border-radius: 3px; background: rgba(255,255,255,.35); }
+.bar.big { height: 18px; margin: .6rem 0 .4rem; } .bar.big i::after { top: 4px; height: 4px; }
+.bar.sm { height: 8px; } .bar.sm i::after { display: none; }
+.stars { color: var(--xp); letter-spacing: .05em; font-size: .9rem; } .stars .off { color: var(--track); }
+.chip { display: inline-flex; align-items: center; border: 2px solid var(--border); border-bottom-width: calc(2px + var(--depth) * .75); background: var(--surface); border-radius: calc(var(--radius) * .7); padding: .4rem .75rem; font-weight: 700; min-height: 42px; }
+.chip.used { visibility: hidden; }

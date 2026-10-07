@@ -1,0 +1,35 @@
+/* ===== Responsive ===== */
+@media (max-width: 1180px) {
+  .app { grid-template-columns: 220px minmax(0, 1fr); }
+  .rail { display: none; }
+  .today-inline { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  .today-inline .card { margin: 0; }
+  .top { display: block; }
+}
+@media (max-width: 860px) {
+  .screen.split { grid-template-columns: 1fr; }
+  .sleft { position: static; max-height: none; }
+  .passage summary { position: sticky; }
+}
+@media (max-width: 760px) {
+  .app { display: block; }
+  .side { display: none; }
+  .main { padding: 1rem 1rem calc(6rem + env(safe-area-inset-bottom, 0px)); }
+  .bottomnav { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--nav); border-top: 2px solid var(--border); padding: .3rem .3rem calc(.3rem + env(safe-area-inset-bottom, 0px)); justify-content: space-around; }
+  .bottomnav .navb { flex-direction: column; gap: .1rem; padding: .35rem .2rem; font-size: .68rem; text-align: center; justify-content: center; border-width: 0; }
+  .bottomnav .navb svg { width: 1.55rem; height: 1.55rem; }
+  .bottomnav .navb.on { background: transparent; }
+  .lvband { min-width: 74px; } .lvband b { font-size: 2.1rem; }
+  .lvhead { flex-wrap: wrap; }
+  .nw { transform: translateX(calc(var(--x, 0) * .7)); }
+  .tf { grid-template-columns: 1fr; }
+  .tfb { flex-direction: row; justify-content: flex-start; }
+  .mrow { grid-template-columns: 1fr; }
+  .pairs { gap: .5rem; } .pb { font-size: .9rem; }
+  .pcheck { min-width: 0; flex: 1; }
+  .phead { padding: .7rem .9rem .2rem; }
+  .pbody { padding: .8rem .9rem 1.5rem; }
+  .bandhero > b { font-size: 4rem; }
+  .mbtns { grid-template-columns: 1fr; }
+}
+@media (max-width: 400px) { .schip.band { font-size: .9rem; } .bottomnav .navb span { font-size: .6rem; } }

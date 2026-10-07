@@ -1,0 +1,3 @@
+/* ===== Motion ===== */
+.nomotion *, .nomotion *::before, .nomotion *::after { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

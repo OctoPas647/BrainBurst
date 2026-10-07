@@ -1,0 +1,21 @@
+/* ===== Fixes ===== */
+.item.info { background: var(--surface); border: 2px solid var(--border); border-bottom-width: calc(2px + var(--depth)); border-radius: var(--radius); padding: 1.4rem 1.5rem; font-size: 1.08rem; font-weight: 600; margin-top: 1rem; }
+.item.info p:first-child { font-family: var(--font-display); font-size: 1.55rem; font-weight: 800; color: var(--primary); margin-bottom: .4rem; line-height: 1.2; }
+.labtimer { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin: .6rem 0; }
+.labtimer b { font-family: var(--font-display); font-size: 2.4rem; font-variant-numeric: tabular-nums; line-height: 1; }
+.labtimer span { font-family: var(--font-ui); font-size: .95rem; font-weight: 600; color: var(--muted); flex: 1; min-width: 200px; }
+.skcard { display: flex; flex-direction: column; gap: .2rem; }
+.skcard header { display: flex; align-items: center; gap: .4rem; color: var(--sk); font-weight: 800; }
+.conf { color: var(--sk); letter-spacing: .15em; font-size: .8rem; } .conf .off { color: var(--track); }
+.course > .btn.wide { flex-wrap: wrap; row-gap: 0; }
+@media (max-width: 1180px) { .today-inline > :nth-child(n+4) { display: none; } }
+@media (max-width: 760px) { .today-inline { grid-template-columns: 1fr; } .today-inline > :nth-child(n+3) { display: none; } }
+.audio .ainfo { display: flex; flex-direction: column; flex: 1; gap: .1rem; color: var(--text); font-size: 1rem; }
+.audio .ainfo b { font-family: var(--font-display); font-size: 1.25rem; }
+.audio .ainfo .aplays { font-size: .9rem; }
+.audio .eq { display: flex; gap: 4px; align-items: flex-end; height: 30px; flex: none; }
+.audio .eq i { width: 5px; height: 25%; background: var(--listening); border-radius: 3px; opacity: .45; }
+.audio.on .eq i, .audio.playing .eq i, .audio.live .eq i { opacity: 1; animation: eqb .9s ease-in-out infinite alternate; }
+.audio .eq i:nth-child(2) { animation-delay: .2s !important; } .audio .eq i:nth-child(3) { animation-delay: .4s !important; } .audio .eq i:nth-child(4) { animation-delay: .1s !important; }
+@keyframes eqb { from { height: 20%; } to { height: 100%; } }
+.screen .qn { align-self: flex-start; text-align: center; display: inline-grid; place-items: center; min-width: 30px; height: 30px; border-radius: 9px; background: var(--surface2); color: var(--muted); font-weight: 800; font-size: .85rem; }
