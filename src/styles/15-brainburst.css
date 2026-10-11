@@ -260,3 +260,17 @@ html:not(.touch) .keypad { max-width: 300px; }
 .level .lvband { min-width: 64px; width: 64px; height: 64px; transform: none; border-radius: 18px; background: color-mix(in srgb, var(--sk) 16%, var(--surface)); color: var(--sk); }
 .skbands { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 .bandbig b { min-width: 2ch; }
+
+/* ---------- 1.2: why each wrong choice is wrong ---------- */
+.pfoot.good .pfb, .pfoot.badf .pfb { max-height: 46vh; overflow-y: auto; overscroll-behavior: contain; }
+.whyw { margin: .3rem 0; padding: .45rem .6rem; border-radius: 10px; background: color-mix(in srgb, var(--wrong) 12%, transparent); font-weight: 600; color: var(--text); }
+.whyw b { color: var(--wrong); }
+.whyo { margin: .35rem 0 .1rem; font-weight: 600; color: var(--text); }
+.whyo summary { cursor: pointer; font-weight: 800; color: var(--muted); list-style: none; display: inline-flex; align-items: center; gap: .35rem; padding: .15rem 0; }
+.whyo summary::-webkit-details-marker { display: none; }
+.whyo summary::before { content: '▸'; transition: transform .15s ease; display: inline-block; }
+.whyo[open] summary::before { transform: rotate(90deg); }
+.whyo ul { margin: .3rem 0 0; padding-left: 0; list-style: none; display: grid; gap: .3rem; }
+.whyo li { padding: .35rem .55rem; border-radius: 10px; background: color-mix(in srgb, var(--text) 6%, transparent); line-height: 1.4; }
+.whyo li b { font-weight: 800; margin-right: .15rem; }
+.revexp .whyw, .revexp .whyo { font-size: .95rem; }

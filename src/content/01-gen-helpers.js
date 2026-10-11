@@ -84,21 +84,26 @@ const plus = b => (b < 0 ? ` - ${fmtNum(-b)}` : ` + ${fmtNum(b)}`);
 /* wrap in math delimiters */
 const m$ = s => `$${s}$`;
 
+/* Wrong choices can carry the reason they're wrong: write [value, 'reason'] instead of just value.
+   The reason is shown when that choice is picked and under "Why not the other choices?". */
+const FILL_WHY = 'This value doesn’t come from the given information. Put it back into the question and it doesn’t work.';
+const wVal = w => (Array.isArray(w) ? w[0] : w), wWhy = w => (Array.isArray(w) ? w[1] || '' : '');
 /* Multiple choice with numbers: dedupes, fills gaps, sorts ascending (as the SAT does) */
 function mcNum(r, ans, wrongs, show = v => m$(fmtNum(v))) {
   const key = v => (typeof v === 'object' ? v.v : v);
-  const seen = new Set([+key(ans).toFixed(6)]); const opts = [ans];
-  for (const w of wrongs) { if (w == null || !isFinite(key(w))) continue; const k = +key(w).toFixed(6); if (!seen.has(k)) { seen.add(k); opts.push(w); } if (opts.length === 4) break; }
+  const seen = new Set([+key(ans).toFixed(6)]); const opts = [ans]; const why = new Map([[ans, '']]);
+  for (const w0 of wrongs) { const w = wVal(w0); if (w == null || !isFinite(key(w))) continue; const k = +key(w).toFixed(6); if (!seen.has(k)) { seen.add(k); opts.push(w); why.set(w, wWhy(w0)); } if (opts.length === 4) break; }
   let step = Math.max(1, Math.round(Math.abs(key(ans)) / 5)), g = 0;
-  while (opts.length < 4 && g++ < 50) { const c = key(ans) + r.sign() * step * r.int(1, 3); const k = +c.toFixed(6); if (!seen.has(k)) { seen.add(k); opts.push(typeof ans === 'object' ? Q(Math.round(c * ans.d), ans.d) : c); } }
+  while (opts.length < 4 && g++ < 50) { const c = key(ans) + r.sign() * step * r.int(1, 3); const k = +c.toFixed(6); if (!seen.has(k)) { seen.add(k); const v = typeof ans === 'object' ? Q(Math.round(c * ans.d), ans.d) : c; opts.push(v); why.set(v, FILL_WHY); } }
   const sorted = opts.slice().sort((a, b) => key(a) - key(b));
-  return { o: sorted.map(show), a: sorted.indexOf(ans), fx: true };
+  return { o: sorted.map(show), a: sorted.indexOf(ans), fx: true, w: sorted.map(v => (v === ans ? '' : why.get(v) || '')) };
 }
 /* Multiple choice with prepared strings: correct first in the list; shuffles unless keep */
 function mcStr(r, ans, wrongs, keep) {
-  const opts = [ans]; for (const w of wrongs) { if (w && !opts.includes(w)) opts.push(w); if (opts.length === 4) break; }
+  const opts = [ans]; const why = { [ans]: '' };
+  for (const w0 of wrongs) { const w = wVal(w0); if (w && !opts.includes(w)) { opts.push(w); why[w] = wWhy(w0); } if (opts.length === 4) break; }
   const order = keep ? opts.slice() : r.shuffle(opts);
-  return { o: order, a: order.indexOf(ans), fx: !!keep };
+  return { o: order, a: order.indexOf(ans), fx: !!keep, w: order.map(o => (o === ans ? '' : why[o] || '')) };
 }
 /* Student-produced response: accepted values (numbers or Q fractions) */
 /* The first accepted answer is what the app shows as "the answer", so it must be enterable on the SAT

@@ -82,7 +82,7 @@ function play(cfg) {
       if (it.t) { const t = S.traps[it.t] || (S.traps[it.t] = { n: 0, fell: 0 }); t.n++; if (!res.ok) t.fell++; }
       if (rated && sk && it.k !== 'pairs') rateItem(sk, (it.d || 2) + (it.t ? 0.5 : 0), res.ok ? 1 : 0, cfg.K);
       const slow = cfg.pace && secs > (secOf(sk) === 'M' ? 95 : 71);
-      if (!cfg.timer || !res.ok) notes.push(`${res.ok ? '' : `<p class="ans">${res.answerHTML ? `Answer: ${res.answerHTML}` : ''}</p>`}${res.msg ? `<p class="why">${esc(res.msg)}</p>` : ''}${it.x && !cfg.timer ? `<div class="why">${rich(it.x)}</div>` : ''}${it.t ? `<p class="trap">${icon('eye')} Trap: ${esc(it.t)}</p>` : ''}${cfg.pace ? `<p class="pacefb ${slow ? 'slow' : ''}">${icon('clock')} ${fmtTime(secs)} · target ${fmtTime(secOf(sk) === 'M' ? 95 : 71)}${slow ? ' — too slow for test pace' : ' — on pace'}</p>` : ''}`);
+      if (!cfg.timer || !res.ok) notes.push(`${res.ok ? '' : `<p class="ans">${res.answerHTML ? `Answer: ${res.answerHTML}` : ''}</p>`}${res.msg ? `<p class="why">${esc(res.msg)}</p>` : ''}${!cfg.timer && res.pickedWhy ? res.pickedWhy : ''}${it.x && !cfg.timer ? `<div class="why">${rich(it.x)}</div>` : ''}${!cfg.timer && res.othersWhy ? res.othersWhy : ''}${it.t ? `<p class="trap">${icon('eye')} Trap: ${esc(it.t)}</p>` : ''}${cfg.pace ? `<p class="pacefb ${slow ? 'slow' : ''}">${icon('clock')} ${fmtTime(secs)} · target ${fmtTime(secOf(sk) === 'M' ? 95 : 71)}${slow ? ' — too slow for test pace' : ' — on pace'}</p>` : ''}`);
     });
     if (useGlobal && P.hearts != null) S.hearts.n = P.hearts;
     beep(allOk);

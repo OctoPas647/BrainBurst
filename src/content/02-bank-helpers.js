@@ -6,6 +6,7 @@
      p   the question;  o  the four options;  a  index of the correct option (0-3)
          for k:'n', a is a list of accepted answers, e.g. ['3/4', '.75']
      x   explanation;   d  difficulty 1-3;   t  optional trap name (for SAT Traps stats)
+     w   why each choice is wrong: a list in the same order as o, with '' for the correct choice
      ch  optional table/chart;  fig  optional graph/figure */
 const BANK = {};
 const LESSON_SETS = {};   // skill id -> [{ n, t, tip, sk, ids }]
@@ -16,7 +17,7 @@ function strHash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h
 function settleOrder(q) {
   if (q.k !== 'm' || q.fx || !Array.isArray(q.o)) return q;
   const perm = RNG(strHash(q.id)).shuffle(q.o.map((_, i) => i));
-  q.o = perm.map(i => q.o[i]); q.a = perm.indexOf(q.a); return q;
+  q.o = perm.map(i => q.o[i]); if (Array.isArray(q.w)) q.w = perm.map(i => q.w[i]); q.a = perm.indexOf(q.a); return q;
 }
 function addItems(prefix, sk, items, extra) {
   return items.map((it, i) => {

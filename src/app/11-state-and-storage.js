@@ -1,6 +1,6 @@
 /* ================= State & persistence ================= */
 const SKILL_IDS = Object.keys(SKILLS);
-const DEF_SETTINGS = { animSpeed: 1, brief: 'new', iconStyle: 'line', iconSize: 1, nodeSize: 1, mode: 'practice', heartsMax: 5, heartMins: 30, dailyGoal: 50, target: 1600, sound: true, anim: true, confetti: true, unlockAll: false, font: 'rounded', scale: 1, radius: 18, depth: 4, themeMode: 'system', rapidLen: 120, trickHearts: 3, sec: 'M', strike: true, pace: true, calcDeg: true, testBreak: true, showTimer: true };
+const DEF_SETTINGS = { animSpeed: 1, brief: 'new', iconStyle: 'line', iconSize: 1, nodeSize: 1, mode: 'practice', heartsMax: 5, heartMins: 30, dailyGoal: 50, target: 1600, sound: true, anim: true, confetti: true, unlockAll: false, font: 'rounded', scale: 1, radius: 18, depth: 4, themeMode: 'system', rapidLen: 120, trickHearts: 3, sec: 'M', strike: true, pace: true, calcDeg: true, testBreak: true, showTimer: true, whyOpen: false };
 const DEF = () => ({
   v: 1, xp: 0, gems: 150, streak: { n: 0, last: null, freeze: 0 }, hearts: { n: 5, ts: Date.now() },
   done: {}, rating: Object.fromEntries([...SEC2, ...SKILL_IDS].map(k => [k, 1000])), games: Object.fromEntries([...SEC2, ...SKILL_IDS].map(k => [k, 0])),

@@ -12,7 +12,14 @@ function rChoice(it, ctx) {
   return { el, ready: () => sel != null, key: n => n < 4 && choose(n), value: () => sel,
     set(v) { if (v != null) { sel = v; draw(); } },
     lock() { locked = true; btns.forEach(b => b.disabled = true); },
-    check() { locked = true; btns.forEach(b => { const i = +b.dataset.i; if (i === it.a) b.classList.add('right'); else if (i === sel) b.classList.add('bad'); b.disabled = true; }); return { ok: sel === it.a, answer: `${'ABCD'[it.a]}) ${plain(it.o[it.a])}`, answerHTML: `<b>${'ABCD'[it.a]})</b> ${inlineHTML(it.o[it.a])}` }; } };
+    check() { locked = true; btns.forEach(b => { const i = +b.dataset.i; if (i === it.a) b.classList.add('right'); else if (i === sel) b.classList.add('bad'); b.disabled = true; }); return { ok: sel === it.a, answer: `${'ABCD'[it.a]}) ${plain(it.o[it.a])}`, answerHTML: `<b>${'ABCD'[it.a]})</b> ${inlineHTML(it.o[it.a])}`, ...whyParts(it, sel) }; } };
+}
+/* Why the picked choice is wrong, and why each other wrong choice is wrong (from it.w) */
+function whyParts(it, sel) {
+  const W = Array.isArray(it.w) ? it.w : []; const mine = sel != null && sel !== it.a && W[sel] ? W[sel] : '';
+  const rest = it.o.map((o, i) => (i !== it.a && i !== sel && W[i] ? `<li><b>${'ABCD'[i]})</b> ${inlineHTML(W[i])}</li>` : '')).join('');
+  return { pickedWhy: mine ? `<div class="whyw"><b>Why ${'ABCD'[sel]} is wrong:</b> ${inlineHTML(mine)}</div>` : '',
+    othersWhy: rest ? `<details class="whyo"${S.settings.whyOpen ? ' open' : ''}><summary>${mine ? 'Why the other choices are wrong' : 'Why not the other choices?'}</summary><ul>${rest}</ul></details>` : '' };
 }
 /* Typed answer (student-produced response) with an on-screen keypad and a live preview */
 function sprPreview(v) { v = String(v || '').trim(); if (!v) return '<span class="muted">Answer preview</span>'; const m = /^(-?)(\d+)\/(\d+)$/.exec(v); return `<span class="m">${mathHTML(m ? `${m[1]}frac{${m[2]}}{${m[3]}}` : v)}</span>`; }
