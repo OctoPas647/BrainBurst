@@ -1,8 +1,8 @@
 {
   "appName": "BrainBurst",
   "title": "BrainBurst \u00b7 SAT prep",
-  "version": "1.1.0",
-  "androidVersionCode": 2,
+  "version": "1.2.0-beta",
+  "androidVersionCode": 3,
   "androidPackage": "com.brainburst.sat",
   "androidMinSdk": 24,
   "androidTargetSdk": 34,
