@@ -30,7 +30,7 @@ function checkItem(q, where) {
 const WHY = { bank: [0, 0], gen: [0, 0] }; const noWhy = [];
 function whyCheck(q, where, isBank) {
   const C = WHY[isBank ? 'bank' : 'gen'];
-  if (q.w == null) { C[1] += 3; if (isBank) noWhy.push(where); return; }
+  if (q.w == null) { C[1] += 3; if (isBank) err(where, 'missing w: add one reason per wrong choice (and \'\' for the correct one)'); return; }
   if (!Array.isArray(q.w) || q.w.length !== (q.o || []).length) return err(where, `w must list one reason per choice (${(q.o || []).length}), with '' for the correct one`);
   if (q.w[q.a]) err(where, `w has a reason for the correct choice (position ${q.a + 1} after shuffling); it should be ''`);
   q.w.forEach((t, i) => { if (i === q.a) return; C[1]++; if (t && String(t).trim()) C[0]++; else if (isBank) err(where, `w is missing the reason for choice “${String(q.o[i]).slice(0, 40)}”`); });
@@ -52,7 +52,6 @@ for (const sk of Object.keys(GENS)) for (const d of Object.keys(GENS[sk])) for (
 TESTS.forEach(t => { const T = TEST_SETS[t.id]; if (!T || !T.RW.m1) { warn(t.id, 'Reading & Writing modules not written yet'); return; } ['m1', 'm2e', 'm2h'].forEach(m => { const n = (T.RW[m] || []).length; if (n !== 27) warn(`${t.id} RW ${m}`, `has ${n} questions (the real test has 27)`); }); });
 const rw = Object.values(BANK).filter(q => !q.test && q.sk && ['wic', 'tsp', 'ctc', 'cid', 'coet', 'coeq', 'inf', 'bnd', 'fss', 'trn', 'rsy'].includes(q.sk)).length;
 const pc = ([a, b]) => (b ? Math.round(a / b * 100) : 100) + '%';
-if (noWhy.length) warn('why-wrong notes', `${noWhy.length} hand-written questions have no w yet (first: ${noWhy.slice(0, 5).join(', ')})`);
 if (GEN_MISSING.size) warn('why-wrong notes', `generators with unexplained wrong choices: ${[...GEN_MISSING].join(', ')}`);
 warns.slice(0, 40).forEach(w => console.log('  ⚠ ' + w));
 console.log(`  Why-wrong coverage: hand-written ${pc(WHY.bank)}, generated ${pc(WHY.gen)} of wrong choices`);
