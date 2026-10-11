@@ -10,7 +10,8 @@ All code shares one global scope; top-level code may only use things from earlie
 |---|---|---|
 | `SECTIONS`, `DOMAINS`, `SKILLS` | content/00-catalog | The SAT structure: 2 sections, 8 domains, 30 skills |
 | `GENS`, `genItem(sk, d, seed)` | content/01, gens/ | Math generators; the same seed always gives the same question |
-| `BANK`, `RWBANK`, `lessonSet`, `drillSet`, `testSet` | content/02 | Hand-written questions by id (lessons, extra drill questions, practice test modules) |
+| `BANK`, `RWBANK`, `lessonSet`, `drillSet`, `testSet` | content/02 | Hand-written questions by id (lessons, extra drill questions, practice test modules). `w` holds why each wrong choice is wrong; `settleOrder` shuffles it with the choices |
+| `mcNum`, `mcStr`, `FILL_WHY` | content/01 | Multiple-choice builders for generators; a wrong choice can be `[value, 'reason']` |
 | `UNITS`, `LESSONS` | content/90, app/13 | The learning path |
 | `S` | app/11 | Saved state (localStorage key `brainburst-sat.v1`) |
 | `rich`, `mathHTML` | app/12 | Text, markdown-lite and math rendering |
@@ -18,6 +19,7 @@ All code shares one global scope; top-level code may only use things from earlie
 | `checkSPR` | app/14 | Typed-answer rules (5 characters, fractions, decimals) |
 | `rateItem`, `predict` | app/15 | Elo rating per skill and section, predicted SAT score |
 | `chartHTML`, `figHTML` | app/18 | Tables, charts, coordinate planes, geometry figures |
+| `whyParts(it, sel)` | app/19 | The “Why B is wrong” note and the “Why not the other choices?” list |
 | `play(cfg)` | app/20 | The lesson player |
 | `openCalc` | app/21 | Calculator and grapher |
 | `runTest` | app/45 | The Bluebook-style practice test runner |
