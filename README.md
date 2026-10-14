@@ -14,7 +14,9 @@ What's inside:
 
 Everything works offline.
 
-**Download:** the latest APK is in [`apk/`](apk/) (currently [BrainBurst-1.2.0.apk](apk/BrainBurst-1.2.0.apk)). Once the signing secret is set up (see below), new versions are also published under **Releases**. Questions are original, written in the style of the digital SAT; they are not College Board questions, and scores are estimates.
+Questions are original, written in the style of the digital SAT; they are not College Board questions, and scores are estimates.
+
+**Download:** the latest APK is in [`apk/`](apk/) (currently [BrainBurst-1.2.0.apk](apk/BrainBurst-1.2.0.apk)). Once the signing secret is set up (see below), new versions are also published under **Releases**.
 
 | Target | Command | Output |
 |---|---|---|
