@@ -12,7 +12,7 @@ name: Build APK
 on:
   push:
     branches: [main]
-    paths-ignore: ['**.md', 'docs/**']
+    paths-ignore: ['**.md', 'docs/**', 'apk/**']
   workflow_dispatch:
 
 permissions:

@@ -12,7 +12,9 @@ What's inside:
 - **Toolkit**: calculator and grapher (with intercepts and intersections), math reference sheet, formulas to memorize, grammar rules, strategies with drills, test-day checklist, how the SAT works.
 - **Progress**: predicted score with a "why this score" breakdown, accuracy and time for every skill, pacing, practice test history, traps that catch you, goal and countdown to test day.
 
-Everything works offline. Questions are original, written in the style of the digital SAT; they are not College Board questions, and scores are estimates.
+Everything works offline.
+
+**Download:** the latest APK is in [`apk/`](apk/) (currently [BrainBurst-1.2.0.apk](apk/BrainBurst-1.2.0.apk)). Once the signing secret is set up (see below), new versions are also published under **Releases**. Questions are original, written in the style of the digital SAT; they are not College Board questions, and scores are estimates.
 
 | Target | Command | Output |
 |---|---|---|
